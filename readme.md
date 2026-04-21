@@ -1,115 +1,177 @@
 # 🚀 Edge AI Inference Verification Framework
 
-A C++-based framework for validating ONNX model inference results against Python-generated golden outputs.
-
-This project demonstrates a **real-world verification pipeline** used in embedded AI systems, ensuring that inference results from C++ match reference outputs generated using Python.
+A **C++-based framework** for validating ONNX model inference results against Python-generated golden outputs — built for real-world embedded AI deployment pipelines.
 
 ---
 
-## 📌 Features
+## 📌 Overview
+
+This project provides a cross-language verification pipeline that ensures C++ inference results match reference outputs generated in Python. It is designed for engineers who need to validate AI model behavior across different runtime environments before deploying to edge devices.
+
+---
+
+## ✨ Features
 
 - ✅ ONNX Runtime inference in C++
 - ✅ OpenCV image preprocessing
 - ✅ Python-based golden output generation
-- ✅ Output comparison with tolerance
+- ✅ Tolerance-based output comparison
 - ✅ Clean modular project structure
 - ✅ Cross-language verification (Python ↔ C++)
 
 ---
 
-## 🧠 Use Case
+## 🎯 Use Cases
 
-This framework is designed for:
-
-- Embedded AI Engineers
-- Verification Engineers
-- Edge AI deployment validation
+- Embedded AI engineers validating model deployment
+- Verification engineers testing inference consistency
+- Edge AI teams ensuring output parity across runtimes
 - Model consistency testing across environments
 
 ---
 
 ## 📁 Project Structure
 
-
+```
 edge-ai-inference-verification-framework/
 │
-├── models/ # ONNX model
-├── test_data/ # Input images
-├── golden_outputs/ # Python-generated outputs
+├── models/                   # ONNX model files
+├── test_data/                # Input images for inference
+├── golden_outputs/           # Python-generated reference outputs
 │
 ├── scripts/
-│ ├── generate_golden.py
-│ └── verify_outputs.py
+│   ├── generate_golden.py    # Generates golden JSON outputs using Python
+│   └── verify_outputs.py     # (Optional) Python-side verification helper
 │
 ├── src/
-│ └── main.cpp # C++ inference + verification
+│   └── main.cpp              # C++ inference engine + verification logic
 │
-├── include/ # headers (json, etc.)
-├── third_party/ # OpenCV, ONNX Runtime
+├── include/                  # Header files (e.g., nlohmann/json)
+├── third_party/              # OpenCV and ONNX Runtime libraries
 │
 ├── CMakeLists.txt
 └── README.md
-
+```
 
 ---
 
 ## ⚙️ Requirements
 
-- C++17
-- CMake ≥ 3.10
-- OpenCV
-- ONNX Runtime
-- Python 3.x (for golden generation)
+| Dependency       | Version      |
+|------------------|--------------|
+| C++ Standard     | C++17        |
+| CMake            | ≥ 3.10       |
+| OpenCV           | Any recent   |
+| ONNX Runtime     | Any recent   |
+| Python           | 3.x          |
+| NumPy            | Latest       |
 
 ---
 
-## 🧪 Workflow
+## 🚀 Getting Started
 
 ### 1️⃣ Generate Golden Output (Python)
 
+Run the Python script to perform inference and save reference outputs as JSON:
+
 ```bash
 python scripts/generate_golden.py
+```
 
-This creates:
+This will create:
 
+```
 golden_outputs/image1_output.json
-2️⃣ Build C++ Project
+```
+
+---
+
+### 2️⃣ Build the C++ Project
+
+```bash
 mkdir build
 cd build
 cmake ..
 cmake --build . --config Release
-3️⃣ Run Inference + Verification
+```
+
+---
+
+### 3️⃣ Run Inference & Verification
+
+```bash
 ./edge_verify
-🔍 Verification Logic
-Runs inference in C++
-Loads golden output from JSON
-Compares values with tolerance:
+```
+
+---
+
+## 🔍 Verification Logic
+
+The C++ binary performs the following steps:
+
+1. Loads the input image and runs ONNX inference
+2. Reads the corresponding golden output from JSON
+3. Compares each output value element-wise with a tolerance:
+
+```
 tolerance = 1e-3
-Output Example:
+```
+
+### ✅ Sample Output
+
+```
 C++: 2.60741 | Golden: 2.60741 | Diff: 0.00001
+C++: 1.15432 | Golden: 1.15431 | Diff: 0.00001
 ...
 ✅ VERIFICATION PASSED
-🧩 Key Technologies
-C++
-ONNX Runtime
-OpenCV
-Python (NumPy, ONNX Runtime)
-JSON (nlohmann)
-⚠️ Notes
-OpenCV parallel backend warnings are normal (TBB/OPENMP not found)
-Ensure correct paths when running from /build
-Use absolute paths if needed
-📈 Future Improvements
-🔹 Support batch inference
-🔹 Add CI pipeline (GitHub Actions)
-🔹 Add visualization of differences
-🔹 Extend to multiple models
-👨‍💻 Author
+```
 
-Mohamed Khaled
+If any value exceeds the tolerance threshold, the output will show:
 
-Embedded Software Engineer
-C++ / Computer Vision / AI Inference
-🌟 If you like this project
+```
+❌ VERIFICATION FAILED — diff exceeded tolerance at index N
+```
 
-Give it a ⭐ on GitHub — it helps a lot!
+---
+
+## 🧩 Key Technologies
+
+| Technology          | Role                                  |
+|---------------------|---------------------------------------|
+| C++17               | Core inference and verification logic |
+| ONNX Runtime (C++)  | Model inference on the C++ side       |
+| OpenCV              | Image loading and preprocessing       |
+| Python + NumPy      | Golden output generation              |
+| ONNX Runtime (Py)   | Reference inference in Python         |
+| nlohmann/json       | JSON serialization/deserialization    |
+
+---
+
+## ⚠️ Notes
+
+- OpenCV parallel backend warnings (TBB/OpenMP not found) are **expected and harmless**
+- Ensure you run `./edge_verify` from the `/build` directory, or use **absolute paths** in the config
+- Golden outputs must be regenerated if the model or input data changes
+
+---
+
+## 📈 Roadmap
+
+- [ ] Support batch inference
+- [ ] Add CI/CD pipeline (GitHub Actions)
+- [ ] Add visual diff output for failed verifications
+- [ ] Extend support to multiple models
+- [ ] Add configurable tolerance levels per layer
+
+---
+
+## 👨‍💻 Author
+
+**Mohamed Khaled**
+*Software Engineer — C++ · Computer Vision · AI Inference*
+
+---
+
+## ⭐ Support
+
+If you find this project useful, please give it a **star on GitHub** — it means a lot and helps others discover it!
